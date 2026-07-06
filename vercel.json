@@ -2,8 +2,32 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/api/(.*)",
       "destination": "/api/index"
+    },
+    {
+      "source": "/src/(.*)",
+      "destination": "/client/public/src/$1"
+    },
+    {
+      "source": "/style.css",
+      "destination": "/client/public/style.css"
+    },
+    {
+      "source": "/logo.png",
+      "destination": "/client/public/logo.png"
+    },
+    {
+      "source": "/logo2.png",
+      "destination": "/client/public/logo2.png"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/client/public/favicon.ico"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/client/public/index.html"
     }
   ],
   "functions": {
