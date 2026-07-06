@@ -8,7 +8,7 @@ async function connectDB() {
   
   if (!dbUri) {
     if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
-      console.warn('WARNING: MONGODB_URI is not defined. Skipping database connection. LexAI will run in JSON file database fallback mode.');
+      console.error('ERROR: MONGODB_URI is not defined. Database persistence is disabled on Vercel.');
       return;
     }
     // Locally, attempt fallback to local MongoDB instance

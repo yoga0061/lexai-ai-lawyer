@@ -9,12 +9,16 @@ const Conversation = require('../models/Conversation');
 const CourtroomSession = require('../models/CourtroomSession');
 const Document = require('../models/Document');
 
+// Environment check
+const isProductionOrVercel = (process.env.NODE_ENV === 'production' || process.env.VERCEL);
+
 // File-based fallback DB path
 const DATA_DIR = path.join(__dirname, '../data');
 const DB_FILE = path.join(DATA_DIR, 'db_fallback.json');
 
 // Ensure data directory and fallback file exist
 function initFallbackDb() {
+  if (isProductionOrVercel) return; // Do not touch filesystem in production/Vercel
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
@@ -32,6 +36,9 @@ initFallbackDb();
 
 // Helper to read fallback DB
 function readFallback() {
+  if (isProductionOrVercel) {
+    throw new Error('Database persistence is currently unavailable in production. Cloud MongoDB connection is offline.');
+  }
   try {
     const data = fs.readFileSync(DB_FILE, 'utf8');
     return JSON.parse(data);
@@ -43,6 +50,9 @@ function readFallback() {
 
 // Helper to write fallback DB
 function writeFallback(data) {
+  if (isProductionOrVercel) {
+    throw new Error('Database persistence is currently unavailable in production. Cloud MongoDB connection is offline.');
+  }
   try {
     fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
   } catch (err) {
@@ -53,6 +63,13 @@ function writeFallback(data) {
 // Check if mongoose is connected
 function isConnected() {
   return mongoose.connection.readyState === 1;
+}
+
+// Ensure database persistence is available in production
+function ensurePersistence() {
+  if (!isConnected() && isProductionOrVercel) {
+    throw new Error('Database persistence is currently unavailable in production. Cloud MongoDB connection is offline.');
+  }
 }
 
 // --- DATABASE SERVICE METHODS ---
