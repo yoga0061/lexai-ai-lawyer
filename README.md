@@ -1,83 +1,134 @@
-# ⚖️ LexAI v2 - AI Legal Assistant Platform for Indian Law
+<div align="center">
 
-LexAI v2 is a production-ready, AI-powered legal assistant designed to help users understand Indian laws through intelligent legal guidance. Built with Google Gemini AI, the platform provides legal consultation, courtroom simulations, contract analysis, multilingual support, and secure user authentication.
+<img src="./client/public/logo.png" alt="LexAI Logo" width="140" />
 
-The application is designed with a resilient architecture that automatically falls back to local storage when MongoDB is unavailable, ensuring uninterrupted functionality during development and testing.
+# ⚖️ LexAI v2
 
----
+### AI-Powered Legal Assistant Platform for Indian Law
 
-# 🚀 Features
+*Understand Indian law, simulate courtrooms, and analyze contracts — all powered by Google Gemini AI.*
 
-## 📖 AI Legal Consultation
-- Get legal guidance based on Indian laws.
-- AI-powered responses using Google Gemini.
-- Context-aware conversations.
-- Supports English, Hindi, Telugu, and Kannada.
+[![Made with Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-Backend-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
+[![Google Gemini](https://img.shields.io/badge/Google-Gemini%20AI-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#-license)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-contributing)
+[![GitHub stars](https://img.shields.io/github/stars/yoga0061/lexai-ai-lawyer?style=social)](https://github.com/yoga0061/lexai-ai-lawyer/stargazers)
 
-## ⚖️ Courtroom Simulator
-- Simulates courtroom proceedings.
-- Generates petitioner and respondent arguments.
-- Produces witness statements and evidence.
-- Creates AI-generated judgments based on presented facts.
+<br/>
 
-## 📄 Document Analyzer
-- Upload legal agreements or contracts.
-- Detect risky clauses.
-- Identify missing sections.
-- Highlight liabilities and legal concerns.
-- Generate AI-powered legal summaries.
+<img src="./client/public/logo2.png" alt="LexAI Banner" width="600" />
 
-## 👤 Secure Authentication
-- JWT-based authentication.
-- User registration and login.
-- Protected API routes.
-- Secure password storage.
-- Profile management.
-
-## 📚 Conversation History
-- Store previous legal consultations.
-- Save courtroom simulations.
-- Save analyzed legal documents.
-- Retrieve previous sessions anytime.
-
-## 🔄 Offline Database Fallback
-If MongoDB is unavailable, LexAI automatically switches to a local JSON database, ensuring the application continues to function without interruption.
+</div>
 
 ---
 
-# 🛠 Technology Stack
+## 📑 Table of Contents
 
-## Frontend
-- HTML5
-- CSS3
-- Vanilla JavaScript
-- Fetch API
-- Local Storage
-
-## Backend
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JWT Authentication
-- Helmet
-- CORS
-- Morgan
-- Express Rate Limiter
-
-## AI
-- Google Gemini API
-- Automatic model fallback
-- Retry mechanism with exponential backoff
-
-## Deployment
-- GitHub
-- Vercel
-- MongoDB Atlas
+- [Overview](#-overview)
+- [Features](#-features)
+- [Technology Stack](#-technology-stack)
+- [Project Structure](#-project-structure)
+- [Environment Variables](#-environment-variables)
+- [Local Installation](#-local-installation)
+- [API Endpoints](#-api-endpoints)
+- [Deploying to Vercel](#-deploying-to-vercel)
+- [Troubleshooting](#-troubleshooting)
+- [Security Features](#-security-features)
+- [Supported Languages](#-supported-languages)
+- [Roadmap](#-roadmap)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Developer](#-developer)
 
 ---
 
-# 📁 Project Structure
+## 🧭 Overview
+
+**LexAI v2** is a production-ready, AI-powered legal assistant designed to help users understand Indian laws through intelligent legal guidance. Built with **Google Gemini AI**, the platform provides legal consultation, courtroom simulations, contract analysis, multilingual support, and secure user authentication.
+
+The application uses a **resilient architecture** that automatically falls back to local storage when MongoDB is unavailable, ensuring uninterrupted functionality during development and testing.
+
+```mermaid
+flowchart LR
+    A[User] -->|Browser| B[Frontend<br/>HTML / CSS / JS]
+    B -->|Fetch API| C[Express.js Backend]
+    C --> D{MongoDB<br/>Available?}
+    D -->|Yes| E[(MongoDB Atlas)]
+    D -->|No| F[(Local JSON Store)]
+    C --> G[Google Gemini API]
+    G -->|Fallback + Retry| C
+    C -->|JWT Auth| B
+```
+
+---
+
+## 🚀 Features
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### 📖 AI Legal Consultation
+- Legal guidance grounded in Indian law
+- AI-powered responses via Google Gemini
+- Context-aware, multi-turn conversations
+- Supports English, Hindi, Telugu, and Kannada
+
+### ⚖️ Courtroom Simulator
+- Simulates courtroom proceedings
+- Generates petitioner & respondent arguments
+- Produces witness statements and evidence
+- Creates AI-generated judgments from facts
+
+### 📄 Document Analyzer
+- Upload legal agreements or contracts
+- Detects risky clauses
+- Identifies missing sections
+- Highlights liabilities and legal concerns
+- Generates AI-powered legal summaries
+
+</td>
+<td width="50%" valign="top">
+
+### 👤 Secure Authentication
+- JWT-based authentication
+- User registration and login
+- Protected API routes
+- Secure password storage (hashed)
+- Profile management
+
+### 📚 Conversation History
+- Stores previous legal consultations
+- Saves courtroom simulations
+- Saves analyzed legal documents
+- Retrieve previous sessions anytime
+
+### 🔄 Offline Database Fallback
+- Auto-switches to local JSON storage if MongoDB is unavailable
+- Zero interruption to the user experience
+- Ideal for local dev/testing without a DB
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🛠 Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| **Frontend** | HTML5 · CSS3 · Vanilla JavaScript · Fetch API · Local Storage |
+| **Backend** | Node.js · Express.js · MongoDB · Mongoose · JWT · Helmet · CORS · Morgan · Express Rate Limiter |
+| **AI** | Google Gemini API · Automatic model fallback · Exponential backoff retry |
+| **Deployment** | GitHub · Vercel · MongoDB Atlas |
+
+---
+
+## 📁 Project Structure
 
 ```text
 lexai-ai-lawyer/
@@ -122,9 +173,9 @@ lexai-ai-lawyer/
 
 ---
 
-# 🔐 Environment Variables
+## 🔐 Environment Variables
 
-Create a `.env` file inside the project root.
+Create a `.env` file inside the project root:
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key
@@ -136,47 +187,46 @@ JWT_SECRET=your_super_secure_secret
 CLIENT_URL=http://localhost:3000
 ```
 
-> Never commit your `.env` file to GitHub.
+> ⚠️ **Never commit your `.env` file to GitHub.** Add it to `.gitignore` and share only `.env.example` with placeholder values.
 
 ---
 
-# 💻 Local Installation
+## 💻 Local Installation
 
-## Prerequisites
+### Prerequisites
 
-- Node.js 18+
-- npm
-- MongoDB (optional)
+| Requirement | Version |
+|---|---|
+| Node.js | 18+ |
+| npm | Latest |
+| MongoDB | Optional (falls back to local JSON) |
 
-## Clone Repository
+### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/yoga0061/lexai-ai-lawyer.git
-
 cd lexai-ai-lawyer
 ```
 
-## Install Dependencies
+### 2. Install Dependencies
 
-Backend
-
+Backend:
 ```bash
 npm install --prefix server
 ```
 
-Frontend (if applicable)
-
+Frontend (if applicable):
 ```bash
 npm install
 ```
 
-## Start Development Server
+### 3. Start the Development Server
 
 ```bash
 npm run dev
 ```
 
-Open your browser:
+### 4. Open in Browser
 
 ```
 http://localhost:3000
@@ -184,203 +234,162 @@ http://localhost:3000
 
 ---
 
-# 📡 API Endpoints
+## 📡 API Endpoints
 
-## Authentication
+### 🔑 Authentication
 
-### Register
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/register` | Register a new user |
+| `POST` | `/api/auth/login` | Log in an existing user |
+| `GET` | `/api/auth/me` | Get the current authenticated user |
 
-```
-POST /api/auth/register
-```
+### 🧠 AI Services
 
-### Login
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/query` | Submit a legal query to the AI |
+| `POST` | `/api/analyze-document` | Analyze an uploaded legal document |
 
-```
-POST /api/auth/login
-```
+### 📚 History
 
-### Current User
-
-```
-GET /api/auth/me
-```
-
----
-
-## AI Services
-
-### Legal Query
-
-```
-POST /api/query
-```
-
-### Analyze Document
-
-```
-POST /api/analyze-document
-```
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/history/conversations` | List all saved conversations |
+| `GET` | `/api/history/conversations/:id` | Get a specific conversation |
+| `DELETE` | `/api/history/conversations/:id` | Delete a conversation |
+| `GET` | `/api/history/courtroom` | List all courtroom sessions |
+| `GET` | `/api/history/courtroom/:id` | Get a specific courtroom session |
+| `GET` | `/api/history/documents` | List all analyzed documents |
 
 ---
 
-## History
+## 🚀 Deploying to Vercel
 
-### Conversations
-
-```
-GET /api/history/conversations
-```
-
-### Conversation Details
-
-```
-GET /api/history/conversations/:id
-```
-
-### Delete Conversation
-
-```
-DELETE /api/history/conversations/:id
-```
-
-### Courtroom Sessions
-
-```
-GET /api/history/courtroom
-```
-
-### Courtroom Details
-
-```
-GET /api/history/courtroom/:id
-```
-
-### Documents
-
-```
-GET /api/history/documents
-```
-
----
-
-# 🚀 Deploying to Vercel
-
-## 1. Push Project to GitHub
+### 1. Push Project to GitHub
 
 ```bash
 git add .
-
 git commit -m "Production Ready"
-
 git push origin main
 ```
 
-## 2. Import into Vercel
+### 2. Import into Vercel
 
-- Login to Vercel
-- Click **New Project**
-- Import **lexai-ai-lawyer**
-- Vercel automatically detects `vercel.json`
+1. Log in to [Vercel](https://vercel.com/)
+2. Click **New Project**
+3. Import **lexai-ai-lawyer**
+4. Vercel automatically detects `vercel.json`
 
----
+### 3. Add Environment Variables
 
-## 3. Add Environment Variables
+Add the following in the Vercel dashboard under **Settings → Environment Variables**:
 
 ```
 GEMINI_API_KEY
-
 MONGODB_URI
-
 JWT_SECRET
-
 CLIENT_URL
 ```
 
----
+### 4. Deploy
 
-## 4. Deploy
-
-Click **Deploy**.
-
-Your application will be available on your Vercel domain.
+Click **Deploy** — your application will be live on your Vercel domain. 🎉
 
 ---
 
-# ❓ Troubleshooting
+## ❓ Troubleshooting
 
-## Gemini Rate Limit
-
+<details>
+<summary><strong>Gemini Rate Limit</strong></summary>
+<br/>
 If the Gemini API quota is exceeded, LexAI automatically attempts fallback models. If all models reach their quota, wait a few minutes and try again.
+</details>
 
----
-
-## JWT Errors
-
-Ensure the following environment variable exists:
+<details>
+<summary><strong>JWT Errors</strong></summary>
+<br/>
+Ensure the following environment variable exists and is set correctly:
 
 ```
 JWT_SECRET
 ```
+</details>
 
----
-
-## Database Not Saving
-
-When deployed on Vercel, local JSON storage is temporary.
-
-For production deployments, configure:
+<details>
+<summary><strong>Database Not Saving</strong></summary>
+<br/>
+When deployed on Vercel, local JSON storage is temporary (ephemeral filesystem). For production deployments, configure:
 
 - MongoDB Atlas
-- MONGODB_URI
+- `MONGODB_URI`
+</details>
 
 ---
 
-# 🔒 Security Features
+## 🔒 Security Features
 
-- JWT Authentication
-- Password Hashing
-- Helmet Security Headers
-- Rate Limiting
-- Input Validation
-- CORS Protection
-- Environment Variable Protection
-
----
-
-# 🌐 Supported Languages
-
-- 🇬🇧 English
-- 🇮🇳 Hindi
-- 🇮🇳 Telugu
-- 🇮🇳 Kannada
+- ✅ JWT Authentication
+- ✅ Password Hashing
+- ✅ Helmet Security Headers
+- ✅ Rate Limiting
+- ✅ Input Validation
+- ✅ CORS Protection
+- ✅ Environment Variable Protection
 
 ---
 
-# 📌 Future Improvements
+## 🌐 Supported Languages
 
-- Voice-based legal assistant
-- OCR for legal document scanning
-- PDF report generation
-- AI legal citation support
-- Real-time lawyer consultation
-- Case recommendation system
-- Legal news integration
-
----
-
-# 📄 License
-
-This project is licensed under the **MIT License**.
+| Language | Code |
+|---|---|
+| 🇬🇧 English | `en` |
+| 🇮🇳 Hindi | `hi` |
+| 🇮🇳 Telugu | `te` |
+| 🇮🇳 Kannada | `kn` |
 
 ---
 
-# 👨‍💻 Developer
+## 📌 Roadmap
+
+- [ ] 🎙️ Voice-based legal assistant
+- [ ] 🔍 OCR for legal document scanning
+- [ ] 📑 PDF report generation
+- [ ] 📖 AI legal citation support
+- [ ] 👨‍⚖️ Real-time lawyer consultation
+- [ ] 🧾 Case recommendation system
+- [ ] 📰 Legal news integration
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m "Add amazing feature"`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+Please open an issue first to discuss major changes.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**. See the [LICENSE](./LICENSE) file for details.
+
+---
+
+## 👨‍💻 Developer
+
+<div align="center">
 
 **Yoganandha Banavathu**
 
-GitHub: https://github.com/yoga0061
+[![GitHub](https://img.shields.io/badge/GitHub-yoga0061-181717?logo=github&logoColor=white)](https://github.com/yoga0061)
 
----
+### ⭐ If you found this project useful, consider giving it a Star on GitHub!
 
-⭐ If you found this project useful, consider giving it a **Star** on GitHub!
+</div>
