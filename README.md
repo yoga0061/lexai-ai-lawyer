@@ -2,24 +2,31 @@
 
 <img src="./client/public/logo.png" alt="LexAI Logo" width="140" />
 
-# ⚖️ LexAI v2
+# ⚖️ LexAI
 
 ### AI-Powered Legal Assistant Platform for Indian Law
 
 *Understand Indian law, simulate courtrooms, and analyze contracts — all powered by Google Gemini AI.*
 
+[![Live Demo](https://img.shields.io/badge/🌐_Live_Demo-mylex--ai.vercel.app-6C5CE7?style=for-the-badge)](https://mylex-ai.vercel.app/)
+
 [![Made with Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-Backend-000000?logo=express&logoColor=white)](https://expressjs.com/)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
 [![Google Gemini](https://img.shields.io/badge/Google-Gemini%20AI-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)](https://vercel.com/)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)](https://mylex-ai.vercel.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#-license)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](#-contributing)
 [![GitHub stars](https://img.shields.io/github/stars/yoga0061/lexai-ai-lawyer?style=social)](https://github.com/yoga0061/lexai-ai-lawyer/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/yoga0061/lexai-ai-lawyer?style=social)](https://github.com/yoga0061/lexai-ai-lawyer/network/members)
 
 <br/>
 
 <img src="./client/public/logo2.png" alt="LexAI Banner" width="600" />
+
+<br/><br/>
+
+### 🔗 [**Try LexAI Live →**](https://mylex-ai.vercel.app/)
 
 </div>
 
@@ -27,6 +34,7 @@
 
 ## 📑 Table of Contents
 
+- [Live Demo](#-live-demo)
 - [Overview](#-overview)
 - [Features](#-features)
 - [Technology Stack](#-technology-stack)
@@ -40,8 +48,29 @@
 - [Supported Languages](#-supported-languages)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
+- [FAQ](#-faq)
 - [License](#-license)
 - [Developer](#-developer)
+
+---
+
+## 🌐 Live Demo
+
+<div align="center">
+
+### 🚀 The application is live and ready to use:
+
+## 👉 **[https://mylex-ai.vercel.app/](https://mylex-ai.vercel.app/)** 👈
+
+| Resource | Link |
+|---|---|
+| 🖥️ Live Application | [mylex-ai.vercel.app](https://mylex-ai.vercel.app/) |
+| 💻 Source Code | [github.com/yoga0061/lexai-ai-lawyer](https://github.com/yoga0061/lexai-ai-lawyer) |
+| 🐛 Report an Issue | [Open an Issue](https://github.com/yoga0061/lexai-ai-lawyer/issues) |
+
+> 💡 **Tip:** No installation needed to try it out — just click the link above, register an account, and start exploring AI-powered legal consultations, the courtroom simulator, and document analysis instantly.
+
+</div>
 
 ---
 
@@ -62,6 +91,16 @@ flowchart LR
     G -->|Fallback + Retry| C
     C -->|JWT Auth| B
 ```
+
+### 💡 Why LexAI?
+
+| | Traditional Legal Research | **LexAI v2** |
+|---|---|---|
+| Availability | Office hours only | 🟢 24/7 instant access |
+| Cost | Expensive consultations | 🟢 Free AI-powered guidance |
+| Language | Usually English-only | 🟢 English, Hindi, Telugu, Kannada |
+| Contract Review | Manual, time-consuming | 🟢 AI-analyzed in seconds |
+| Case Preparation | Requires legal expertise | 🟢 Courtroom simulation for practice |
 
 ---
 
@@ -373,6 +412,34 @@ Contributions are welcome! To contribute:
 5. Open a Pull Request
 
 Please open an issue first to discuss major changes.
+
+---
+
+## 💬 FAQ
+
+<details>
+<summary><strong>Is LexAI a substitute for a real lawyer?</strong></summary>
+<br/>
+No. LexAI provides AI-generated legal guidance and information for educational purposes. For binding legal advice or representation, always consult a licensed advocate.
+</details>
+
+<details>
+<summary><strong>Is the live demo free to use?</strong></summary>
+<br/>
+Yes — visit <a href="https://mylex-ai.vercel.app/">mylex-ai.vercel.app</a>, register an account, and start using the AI consultation, courtroom simulator, and document analyzer right away.
+</details>
+
+<details>
+<summary><strong>What happens to my uploaded documents?</strong></summary>
+<br/>
+Documents are processed to generate an AI analysis and, if enabled, stored in your conversation history (MongoDB Atlas or local fallback storage) so you can revisit them later.
+</details>
+
+<details>
+<summary><strong>Can I self-host LexAI instead of using the live demo?</strong></summary>
+<br/>
+Yes — follow the <a href="#-local-installation">Local Installation</a> and <a href="#-deploying-to-vercel">Deploying to Vercel</a> sections to run your own instance.
+</details>
 
 ---
 
