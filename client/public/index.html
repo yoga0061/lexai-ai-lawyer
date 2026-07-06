@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LexAI is your production-ready AI Legal Assistant. Get AI-powered legal consultations, simulated courtroom debates, and contract audits based on Indian law." />
+  <title>LexAI - AI Legal Assistant Platform</title>
+  
+  <!-- Styling -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" href="favicon.ico" />
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- External Libraries for PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+  <!-- Sidebar / History Drawer -->
+  <aside id="historySidebar" class="sidebar" aria-label="User History">
+    <div class="sidebar-header">
+      <h3><i class="fas fa-history"></i> <span data-i18n="historyTitle">Your Case History</span></h3>
+      <button id="closeSidebarBtn" class="close-btn" aria-label="Close sidebar">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="sidebar-content">
+      <div id="sidebarPlaceholder" class="sidebar-info-msg">
+        <i class="fas fa-lock"></i>
+        <p data-i18n="historyLoginPrompt">Sign in to sync your advice history, debates, and audits in the cloud.</p>
+      </div>
+      <div id="sidebarLists" class="sidebar-lists" style="display: none;">
+        <section class="history-section">
+          <h4><i class="fas fa-balance-scale"></i> <span data-i18n="consultations">Consultations</span></h4>
+          <ul id="conversationHistoryList" class="history-list"></ul>
+        </section>
+        <section class="history-section">
+          <h4><i class="fas fa-gavel"></i> <span data-i18n="courtroomDebates">Courtroom Debates</span></h4>
+          <ul id="courtroomHistoryList" class="history-list"></ul>
+        </section>
+        <section class="history-section">
+          <h4><i class="fas fa-file-signature"></i> <span data-i18n="docAudits">Document Audits</span></h4>
+          <ul id="documentHistoryList" class="history-list"></ul>
+        </section>
+      </div>
+    </div>
+  </aside>
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- Header / Navigation -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-left">
+        <button id="toggleSidebarBtn" class="icon-btn" aria-label="Toggle history sidebar">
+          <i class="fas fa-bars"></i>
+        </button>
+        <a href="#" class="logo-link" onclick="event.preventDefault()">
+          <img src="logo.png" alt="LexAI Logo" class="logo" />
+          <div class="logo-text">
+            <span class="logo-title">LexAI</span>
+            <span class="logo-tagline" data-i18n="navbarQuote">Justice for all, guided by intelligence</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="navbar-tabs">
+        <button class="tab-link active" data-tab="advisorTab">
+          <i class="fas fa-balance-scale"></i> <span data-i18n="advisor">Advisor</span>
+        </button>
+        <button class="tab-link" data-tab="courtroomTab">
+          <i class="fas fa-gavel"></i> <span data-i18n="courtroom">Courtroom</span>
+        </button>
+        <button class="tab-link" data-tab="documentTab">
+          <i class="fas fa-file-contract"></i> <span data-i18n="docAnalyzer">Doc Auditor</span>
+        </button>
+      </div>
+
+      <div class="navbar-right">
+        <!-- Language Selector -->
+        <div class="lang-wrapper">
+          <i class="fas fa-globe"></i>
+          <select id="languageSelect" class="lang-select">
+            <option value="English">English</option>
+            <option value="Hindi">हिंदी (Hindi)</option>
+            <option value="Telugu">తెలుగు (Telugu)</option>
+            <option value="Kannada">ಕನ್ನಡ (Kannada)</option>
+          </select>
+        </div>
+
+        <!-- Auth Actions -->
+        <div id="authNavbarSection" class="auth-section">
+          <button id="navSignInBtn" class="primary-btn sm"><i class="fas fa-sign-in-alt"></i> <span data-i18n="signIn">Sign In</span></button>
+          <div id="navUserBadge" class="user-badge" style="display: none;">
+            <i class="fas fa-user-circle"></i>
+            <span id="navUsername"></span>
+            <button id="navSignOutBtn" class="secondary-btn sm danger-border"><i class="fas fa-sign-out-alt"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="legal-hero">
+    <canvas id="heroCanvas" class="hero-canvas"></canvas>
+    
+    <div class="hero-grid-container">
+      <!-- Left Column: Content -->
+      <div class="hero-left-column">
+        <div class="hero-badge fade-in-down">
+          <i class="fas fa-microchip"></i>
+          <span>AI + Legal Tech v2.0</span>
+        </div>
+        <h1 class="legal-headline fade-in-up">
+          <span data-i18n="heroHeadline">Precision Legal Intelligence</span>
+        </h1>
+        <p class="legal-subhead fade-in-up" data-i18n="heroSubhead">
+          Expert Indian legal advice, automated debate simulation, and document risk auditing.
+        </p>
+        <div class="legal-cta fade-in-up">
+          <button class="legal-button" id="startTourBtn">
+            <span data-i18n="quickTour">Take Guided Tour</span>
+            <i class="fas fa-compass scale-icon"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Right Column: Interactive 3D HUD Visualizer -->
+      <div class="hero-right-column fade-in-zoom">
+        <div class="hero-visual-viewport">
+          <div class="hero-visual">
+            <!-- Concentric HUD rings -->
+            <div class="hud-ring ring-outer"></div>
+            <div class="hud-ring ring-middle"></div>
+            <div class="hud-ring ring-inner"></div>
+            
+            <!-- Central Scale Element -->
+            <div class="hud-center">
+              <i class="fas fa-balance-scale"></i>
+            </div>
+            
+            <!-- Glassmorphic floating widgets -->
+            <div class="glass-card widget-analytics" data-depth="0.15">
+              <header><i class="fas fa-chart-line text-gold"></i> <span>Case Analytics</span></header>
+              <div class="widget-body">
+                <div class="analytics-item">
+                  <span class="label">BNS Sections</span>
+                  <span class="value text-gold">Active</span>
+                </div>
+                <div class="analytics-item">
+                  <span class="label">Confidence</span>
+                  <span class="value text-cyan">94.8%</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="glass-card widget-status" data-depth="0.25">
+              <header><i class="fas fa-shield-alt text-cyan"></i> <span>Doc Auditor</span></header>
+              <div class="widget-body">
+                <div class="status-bar">
+                  <span class="bar-label">Contract Risk</span>
+                  <div class="bar-track"><div class="bar-fill" style="width: 15%;"></div></div>
+                  <span class="bar-val">15%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card widget-timeline" data-depth="0.10">
+              <header><i class="fas fa-gavel text-gold"></i> <span>Court Simulator</span></header>
+              <div class="widget-body">
+                <div class="timeline-hud-item">
+                  <span class="dot pulse-blue"></span>
+                  <span class="text">Simulating trial...</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main class="main-container">
+
+    <!-- TAB 1: AI LEGAL ADVISOR -->
+    <div id="advisorTab" class="tab-content active">
+      <div class="input-card">
+        <div class="input-group">
+          <label for="advisorInput" class="input-label">
+            <i class="fas fa-edit"></i>
+            <span data-i18n="describeCase">Describe your situation in detail</span>
+          </label>
+          <textarea
+            id="advisorInput"
+            class="input-textarea"
+            placeholder="e.g., My landlord terminated my commercial lease with only 7 days notice instead of the 30 days written in the contract. What are my legal remedies?"
+            rows="6"
+            spellcheck="false"
+          ></textarea>
+          <div id="advisorCharCounter" class="char-counter">0 / 2000</div>
+          <small class="input-help">
+            <i class="fas fa-info-circle"></i>
+            <span data-i18n="advisorHelp">Detail acts, dates, and contracts for more accurate statutory citation references.</span>
+          </small>
+        </div>
+
+        <div class="button-group">
+          <button id="advisorAnalyzeBtn" class="primary-btn">
+            <span class="btn-text" data-i18n="btnAnalyze">Analyze Situation</span>
+            <span class="spinner" style="display: none;"></span>
+          </button>
+          <button id="advisorClearBtn" class="secondary-btn"><i class="fas fa-eraser"></i> <span data-i18n="btnClear">Clear</span></button>
+          <button id="advisorPdfBtn" class="secondary-btn" disabled><i class="fas fa-file-pdf"></i> <span data-i18n="btnPdf">Export PDF</span></button>
+        </div>
+
+        <div class="example-prompts">
+          <p class="prompt-title" data-i18n="examplePromptsTitle">Frequently Audited Situations:</p>
+          <div class="prompt-buttons">
+            <button class="prompt-btn" data-prompt="My employer did not pay my salary for the last two months and terminated me via email when I requested it. What action can I take?">Employment Terminations</button>
+            <button class="prompt-btn" data-prompt="My neighbor encroached on my agricultural land boundaries during fencing and threatened me when questioned. What legal actions can I initiate?">Land Disputes</button>
+            <button class="prompt-btn" data-prompt="A consumer electronics dealer sold me a defective laptop and refused replacement or refund within the warranty period. What are my options?">Consumer Redressal</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="advisorLoading" class="loading-indicator" style="display: none;">
+        <div class="spinner-large"></div>
+        <p data-i18n="advisorLoadingMsg">AI Legal Assistant is cross-referencing IPC, BNS, and court acts. Please wait...</p>
+      </div>
+
+      <div id="advisorResult" class="result-box" style="display: none;"></div>
+    </div>
+
+    <!-- TAB 2: COURTROOM SIMULATOR -->
+    <div id="courtroomTab" class="tab-content">
+      <div class="input-card">
+        <div class="input-group">
+          <label for="courtroomInput" class="input-label">
+            <i class="fas fa-gavel"></i>
+            <span data-i18n="courtroomTitlePrompt">State facts for the Simulated Courtroom Debate</span>
+          </label>
+          <textarea
+            id="courtroomInput"
+            class="input-textarea"
+            placeholder="e.g., A tenant was caught subletting the commercial space without owner permission, violating clause 12 of lease. Tenant claims verbal permission."
+            rows="5"
+            spellcheck="false"
+          ></textarea>
+          <div id="courtroomCharCounter" class="char-counter">0 / 2000</div>
+        </div>
+
+        <div class="button-group">
+          <button id="courtroomSimulateBtn" class="primary-btn">
+            <span class="btn-text" data-i18n="btnSimulate">Simulate Trial</span>
+            <span class="spinner" style="display: none;"></span>
+          </button>
+          <button id="courtroomClearBtn" class="secondary-btn"><i class="fas fa-eraser"></i> <span data-i18n="btnClear">Clear</span></button>
+          <button id="courtroomPdfBtn" class="secondary-btn" disabled><i class="fas fa-file-pdf"></i> <span data-i18n="btnPdf">Export Transcript</span></button>
+        </div>
+      </div>
+
+      <div id="courtroomLoading" class="loading-indicator" style="display: none;">
+        <div class="spinner-large"></div>
+        <p data-i18n="courtroomLoadingMsg">Preparing arguments, appointing simulated judge and defense counsel...</p>
+      </div>
+
+      <div id="courtroomChat" class="chat-box" style="display: none;"></div>
+    </div>
+
+    <!-- TAB 3: DOCUMENT AUDITOR -->
+    <div id="documentTab" class="tab-content">
+      <div class="input-card">
+        <div class="input-group">
+          <label class="input-label">
+            <i class="fas fa-file-contract"></i>
+            <span data-i18n="uploadContract">Upload contract or paste legal text</span>
+          </label>
+          <div id="dropzone" class="dropzone">
+            <i class="fas fa-cloud-upload-alt dropzone-icon"></i>
+            <p><span data-i18n="dragDropText">Drag & drop legal document (.txt files only) or</span> <label for="fileUploadInput" class="upload-link">browse</label></p>
+            <input type="file" id="fileUploadInput" accept=".txt" style="display: none;" />
+            <div id="selectedFilename" class="selected-file"></div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="documentTextInput" class="input-label" data-i18n="orPasteText">Or paste the full agreement text below:</label>
+          <textarea
+            id="documentTextInput"
+            class="input-textarea"
+            placeholder="Paste contract, agreement, or deed clauses here..."
+            rows="8"
+            spellcheck="false"
+          ></textarea>
+        </div>
+
+        <div class="button-group">
+          <button id="documentAuditBtn" class="primary-btn">
+            <span class="btn-text" data-i18n="btnAudit">Audit Document</span>
+            <span class="spinner" style="display: none;"></span>
+          </button>
+          <button id="documentClearBtn" class="secondary-btn"><i class="fas fa-eraser"></i> <span data-i18n="btnClear">Clear</span></button>
+        </div>
+      </div>
+
+      <div id="documentLoading" class="loading-indicator" style="display: none;">
+        <div class="spinner-large"></div>
+        <p data-i18n="docLoadingMsg">Analyzing contract clauses, identifying liabilities, and flagging red-flags...</p>
+      </div>
+
+      <div id="documentResult" class="document-result-area" style="display: none;">
+        <div class="doc-header-card">
+          <h3 id="docResultTitle"><i class="fas fa-file-alt"></i> <span>Document Analysis Results</span></h3>
+          <button id="docPdfBtn" class="secondary-btn"><i class="fas fa-file-pdf"></i> <span data-i18n="btnPdf">Export Audit</span></button>
+        </div>
+        
+        <div class="doc-analysis-grid">
+          <!-- Summary Block -->
+          <div class="doc-block summary-card">
+            <h4><i class="fas fa-align-left"></i> <span data-i18n="execSummary">Executive Summary</span></h4>
+            <p id="docSummaryText"></p>
+          </div>
+
+          <!-- Risks Block -->
+          <div class="doc-block risks-card">
+            <h4><i class="fas fa-exclamation-triangle"></i> <span data-i18n="flaggedRisks">Key Red Flags & Risks</span></h4>
+            <ul id="docRisksList" class="doc-bullets"></ul>
+          </div>
+
+          <!-- Key Clauses Block -->
+          <div class="doc-block clauses-card">
+            <h4><i class="fas fa-shield-alt"></i> <span data-i18n="keyClauses">Identified Key Clauses</span></h4>
+            <ul id="docClausesList" class="doc-bullets"></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODALS -->
+
+  <!-- Welcome / Tour Modal -->
+  <div class="modal-overlay" id="welcomeModal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-labelledby="welcomeTitle" aria-describedby="welcomeDesc">
+      <button class="modal-close-btn" id="closeWelcomeBtn" aria-label="Close welcome modal">&times;</button>
+      <div class="modal-header">
+        <div class="modal-icon"><i class="fas fa-balance-scale"></i></div>
+        <h2 id="welcomeTitle">Welcome to LexAI</h2>
+      </div>
+      <div class="modal-content">
+        <p id="welcomeDesc" data-i18n="welcomeDescText">Your premium AI-driven legal sandbox. Analyze grievances under Indian law, simulate opposing courtroom debates, and audit agreements for risks instantly.</p>
+        <div class="modal-features">
+          <div class="feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span data-i18n="welcomeFeat1">Statutory citations with estimated confidence scores.</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span data-i18n="welcomeFeat2">Step-by-step actionable courtroom debate simulation.</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-check-circle"></i>
+            <span data-i18n="welcomeFeat3">Risk auditing and contract red-flag identification.</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="welcomeTourBtn" class="secondary-btn"><span data-i18n="btnTour">Take Tour</span></button>
+        <button id="welcomeStartBtn" class="primary-btn"><span data-i18n="btnStart">Get Started</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sign In Modal -->
+  <div class="modal-overlay" id="loginModal" aria-hidden="true">
+    <div class="modal auth-modal" role="dialog">
+      <button class="modal-close-btn" id="closeLoginBtn" aria-label="Close login modal">&times;</button>
+      <div class="modal-header">
+        <h2>Sign In</h2>
+      </div>
+      <div class="modal-content">
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail" data-i18n="emailLabel">Email Address</label>
+            <input type="email" id="loginEmail" required placeholder="name@domain.com" />
+          </div>
+          <div class="form-group">
+            <label for="loginPassword" data-i18n="passwordLabel">Password</label>
+            <input type="password" id="loginPassword" required placeholder="••••••••" />
+          </div>
+          <div id="loginError" class="modal-error-msg" style="display: none;"></div>
+          <button class="primary-btn w-full" type="submit" data-i18n="signIn">Sign In</button>
+        </form>
+        <p class="modal-footer-text">
+          <span data-i18n="noAccountText">Don't have an account?</span> 
+          <a href="#" id="toRegisterLink" data-i18n="registerLink">Register</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div class="modal-overlay" id="registerModal" aria-hidden="true">
+    <div class="modal auth-modal" role="dialog">
+      <button class="modal-close-btn" id="closeRegisterBtn" aria-label="Close register modal">&times;</button>
+      <div class="modal-header">
+        <h2>Create Account</h2>
+      </div>
+      <div class="modal-content">
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="registerUsername" data-i18n="usernameLabel">Username</label>
+            <input type="text" id="registerUsername" required placeholder="lawyer123" />
+          </div>
+          <div class="form-group">
+            <label for="registerEmail" data-i18n="emailLabel">Email Address</label>
+            <input type="email" id="registerEmail" required placeholder="name@domain.com" />
+          </div>
+          <div class="form-group">
+            <label for="registerPassword" data-i18n="passwordLabel">Password (Min. 6 characters)</label>
+            <input type="password" id="registerPassword" required placeholder="••••••••" />
+          </div>
+          <div id="registerError" class="modal-error-msg" style="display: none;"></div>
+          <button class="primary-btn w-full" type="submit" data-i18n="btnRegister">Register</button>
+        </form>
+        <p class="modal-footer-text">
+          <span data-i18n="hasAccountText">Already have an account?</span> 
+          <a href="#" id="toLoginLink" data-i18n="signIn">Sign In</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section about">
+        <h3 data-i18n="footerAboutTitle">About LexAI</h3>
+        <p data-i18n="footerAboutBody">
+          LexAI provides automated legal research and evaluation based on general principles of Indian jurisprudence. This system is for research purposes only. It does not constitute formal legal advice, and no attorney-client relationship is formed.
+        </p>
+        <p class="caution-box">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span data-i18n="footerCaution">For serious statutory disputes, consult a certified advocate before filing filings.</span>
+        </p>
+      </div>
+      <div class="footer-section contact">
+        <h3 data-i18n="footerContactTitle">Developer & Support</h3>
+        <div class="contact-links">
+          <a href="mailto:yoga.142007@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+          <a href="https://www.linkedin.com/in/yoganandha-banavathu-a02092305/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+          <a href="https://github.com/yoga0061" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+          <a href="https://www.instagram.com/offx.yoga" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 LexAI. All rights reserved.</p>
+      <p id="visitorCount"><i class="fas fa-users"></i> <span data-i18n="visitors">Visitors:</span> 0</p>
+    </div>
+  </footer>
+
+  <!-- App Main Logic Module -->
+  <script type="module" src="src/script.js"></script>
+</body>
+</html>

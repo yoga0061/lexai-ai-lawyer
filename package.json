@@ -1,0 +1,13 @@
+{
+  "name": "lexai",
+  "version": "1.0.0",
+  "description": "LexAI - AI Legal Assistant Platform for Indian Law",
+  "private": true,
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
