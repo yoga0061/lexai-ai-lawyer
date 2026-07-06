@@ -3,7 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { z } = require('zod');
 const dbService = require('../services/db.service');
-const { JWT_SECRET, authMiddleware } = require('../middleware/auth');
+const { getJwtSecret, authMiddleware } = require('../middleware/auth');
 
 // Zod schemas for input validation
 const registerSchema = z.object({
@@ -22,7 +22,7 @@ function generateToken(user) {
   const id = user._id || user.id;
   return jwt.sign(
     { id, username: user.username },
-    JWT_SECRET,
+    getJwtSecret(),
     { expiresIn: '7d' } // Token valid for 7 days
   );
 }

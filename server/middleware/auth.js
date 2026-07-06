@@ -1,18 +1,14 @@
 const jwt = require('jsonwebtoken');
 
-function resolveJwtSecret() {
-  const secret = process.env.JWT_SECRET;
-  if (secret) return secret;
-  if (process.env.NODE_ENV === 'production' || process.env.VERCEL) {
-    throw new Error('JWT_SECRET environment variable is required in production.');
-  }
-  console.warn('WARNING: JWT_SECRET not set. Using development-only fallback.');
-  return 'dev-only-jwt-fallback-do-not-use-in-production';
+function getJwtSecret() {
+  return process.env.JWT_SECRET || 'dev-only-jwt-fallback-do-not-use-in-production';
 }
 
-const JWT_SECRET = resolveJwtSecret();
-
 function authMiddleware(req, res, next) {
+  if ((process.env.NODE_ENV === 'production' || process.env.VERCEL) && !process.env.JWT_SECRET) {
+    return res.status(500).json({ error: 'Configuration Error: JWT_SECRET environment variable is missing on the server.' });
+  }
+
   const authHeader = req.header('Authorization');
   if (!authHeader) {
     return res.status(401).json({ error: 'No authorization token, access denied' });
@@ -27,7 +23,7 @@ function authMiddleware(req, res, next) {
   const token = parts[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, getJwtSecret());
     req.user = decoded; // { id: userId, username: '...' }
     next();
   } catch (error) {
@@ -36,6 +32,11 @@ function authMiddleware(req, res, next) {
 }
 
 function optionalAuthMiddleware(req, res, next) {
+  if ((process.env.NODE_ENV === 'production' || process.env.VERCEL) && !process.env.JWT_SECRET) {
+    req.user = null;
+    return next();
+  }
+
   const authHeader = req.header('Authorization');
   if (!authHeader) {
     req.user = null;
@@ -51,7 +52,7 @@ function optionalAuthMiddleware(req, res, next) {
   const token = parts[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, getJwtSecret());
     req.user = decoded;
   } catch (error) {
     req.user = null; // Ignore invalid token and treat as anonymous query
@@ -59,4 +60,4 @@ function optionalAuthMiddleware(req, res, next) {
   next();
 }
 
-module.exports = { authMiddleware, optionalAuthMiddleware, JWT_SECRET };
+module.exports = { authMiddleware, optionalAuthMiddleware, getJwtSecret };

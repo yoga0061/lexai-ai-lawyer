@@ -54,6 +54,37 @@ app.use((err, req, res, next) => {
   next();
 });
 
+// Verification for AI endpoints
+const checkAiConfig = (req, res, next) => {
+  if (!process.env.GEMINI_API_KEY) {
+    return res.status(500).json({
+      error: "Configuration Error: GEMINI_API_KEY is not defined on the server. AI features are unavailable."
+    });
+  }
+  next();
+};
+
+// Verification for DB/Auth endpoints
+const checkDbConfig = (req, res, next) => {
+  const missing = [];
+  if (!process.env.MONGODB_URI) missing.push("MONGODB_URI");
+  if (!process.env.JWT_SECRET) missing.push("JWT_SECRET");
+  if (!process.env.CLIENT_URL) missing.push("CLIENT_URL");
+  
+  if (missing.length > 0) {
+    return res.status(500).json({
+      error: `Configuration Error: The following database/auth environment variables are missing: ${missing.join(", ")}. Persistence and user authentication features are disabled.`
+    });
+  }
+  next();
+};
+
+// Apply configuration checks
+app.use('/api/query', checkAiConfig);
+app.use('/api/analyze-document', checkAiConfig);
+app.use('/api/auth', checkDbConfig);
+app.use('/api/history', checkDbConfig);
+
 // Register routers
 app.use('/api/auth', authRouter);
 app.use('/api', apiRouter);
