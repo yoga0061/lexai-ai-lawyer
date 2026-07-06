@@ -22,7 +22,7 @@
 
 <br/>
 
-<img src="./client/public/logo2.png" alt="LexAI Banner" width="600" />
+<img src="./client/public/logo.png" alt="LexAI Banner" width="600" />
 
 <br/><br/>
 
